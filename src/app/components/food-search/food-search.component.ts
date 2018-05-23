@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, ElementRef, ViewChild, ViewChildren} from "@angular/core";
-import {CalculationService} from "../services/calculation.service";
-import {FoodList, ShortFoodDescription} from "../models/models";
-import {FoodDatabaseService} from "../services/food-database.service";
+import {CalculationService} from "../../services/calculation.service";
+import {FoodList, ShortFoodDescription} from "../../models/models";
+import {FoodDatabaseService} from "../../services/food-database.service";
 import {Observable} from "rxjs/Observable";
 import "rxjs/add/observable/fromEvent";
 import "rxjs/add/operator/debounceTime";
@@ -24,7 +24,6 @@ export class FoodSearchComponent implements AfterViewInit {
   }
 
   public ngAfterViewInit(): void {
-    console.log(this.searchInput)
     Observable.fromEvent(this.searchInput.nativeElement, "keyup")
       .debounceTime(1000).subscribe(() => {
       this.searchFoods(this.searchInput.nativeElement.value);

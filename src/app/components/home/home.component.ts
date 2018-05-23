@@ -1,21 +1,20 @@
 import {
   Component,
   OnInit
-} from '@angular/core';
+} from "@angular/core";
 
-import { AppState } from '../app.service';
-import { Title } from './title';
-import { XLargeDirective } from './x-large';
+import { AppState } from "../../app.service";
+import { Title } from "./title";
 
 @Component({
   /**
    * The selector is what angular internally uses
    * for `document.querySelectorAll(selector)` in our index.html
-   * where, in this case, selector is the string 'home'.
+   * where, in this case, selector is the string "home".
    */
-  selector: 'home',  // <home></home>
+  selector: "home",  // <home></home>
   /**
-   * We need to tell Angular's Dependency Injection which providers are in our app.
+   * We need to tell Angular"s Dependency Injection which providers are in our app.
    */
   providers: [
     Title
@@ -23,17 +22,17 @@ import { XLargeDirective } from './x-large';
   /**
    * Our list of styles in our component. We may add more to compose many styles together.
    */
-  styleUrls: [ './home.component.scss' ],
+  styleUrls: [ "./home.component.scss" ],
   /**
-   * Every Angular template is first compiled by the browser before Angular runs it's compiler.
+   * Every Angular template is first compiled by the browser before Angular runs it"s compiler.
    */
-  templateUrl: './home.component.html'
+  templateUrl: "./home.component.html"
 })
 export class HomeComponent implements OnInit {
   /**
    * Set our default values
    */
-  public localState = { value: '' };
+  public localState = { value: "" };
   /**
    * TypeScript public modifiers
    */
@@ -43,15 +42,15 @@ export class HomeComponent implements OnInit {
   ) {}
 
   public ngOnInit() {
-    console.log('hello `Home` component');
+    console.log("hello `Home` component");
     /**
      * this.title.getData().subscribe(data => this.data = data);
      */
   }
 
   public submitState(value: string) {
-    console.log('submitState', value);
-    this.appState.set('value', value);
-    this.localState.value = '';
+    console.log("submitState", value);
+    this.appState.set("value", value);
+    this.localState.value = "";
   }
 }
