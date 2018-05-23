@@ -1,0 +1,15 @@
+.search-input-container{
+  width: 100%;
+  border: 1px solid red;
+  position: relative;
+
+  input {
+    width:100%;
+  }
+}
+
+.food-items-dropdown-container{
+  width:100%;
+  position:absolute;
+  border: 1px solid blue;
+}

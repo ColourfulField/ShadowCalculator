@@ -1,0 +1,9 @@
+<div class="search-input-container">
+  <input #searchInput/>
+  <div class="food-items-dropdown-container">
+    <div *ngFor="let food of foods" class="food-item">
+      <span>{{food.name}}</span>
+    </div>
+  </div>
+</div>
+
