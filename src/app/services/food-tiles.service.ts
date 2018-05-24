@@ -9,9 +9,9 @@ export class FoodTilesService {
   private _foodTiles: FoodTileData[] = [];
 
   constructor() {
-    this._foodTiles.push({name: "qwe", maxValue: 1000, amount: 50, caloryValue: 10, proteinValue: 5});
-    this._foodTiles.push({name: "qwe2", maxValue: 1000, amount: 50, caloryValue: 10, proteinValue: 15});
-    this._foodTiles.push({name: "qwe3", maxValue: 1000, amount: 50, caloryValue: 10, proteinValue: 10});
+    this._foodTiles.push({name: "qwe", maxValue: 100, amount: 50, caloryValue: 10, proteinValue: 5});
+    this._foodTiles.push({name: "qwe2", maxValue: 100, amount: 50, caloryValue: 10, proteinValue: 15});
+    this._foodTiles.push({name: "qwe3", maxValue: 100, amount: 50, caloryValue: 10, proteinValue: 10});
 
     this.foodTiles = new BehaviorSubject<FoodTileData[]>(this._foodTiles);
   }
@@ -26,3 +26,4 @@ export class FoodTilesService {
     this.foodTiles.next(this._foodTiles);
   }
 }
+

@@ -1,7 +1,7 @@
 <div class="food-tile">
   <h2>{{tileData.name}}</h2>
-  <slider [min]="0" [max]="100" [value]="sliderValue" (valueChanged)="updateValue($event)"></slider>
-  {{sliderValue}}
+  <slider [min]="0" [max]="tileData.maxValue" [value]="tileData.amount" (valueChanged)="updateValue($event)"></slider>
+  {{tileData.amount}}
 </div>
 
 

@@ -1,6 +1,6 @@
-import { Injectable } from "@angular/core";
-import { FoodTilesService } from "./food-tiles.service";
-import { CalculationRatio, FoodTileData } from "../models/models";
+import {Injectable} from "@angular/core";
+import {FoodTilesService} from "./food-tiles.service";
+import {CalculationRatio, FoodTileData} from "../models/models";
 
 const MINIMUM_RATIO_INTERVAL = 0.0001;
 
@@ -8,9 +8,9 @@ const MINIMUM_RATIO_INTERVAL = 0.0001;
 export class CalculationService {
   private foodTiles: FoodTileData[];
   private calories: number;
-  private protein: number;
+  private proteins: number;
 
-  constructor(foodTilesService: FoodTilesService) {
+  constructor(private foodTilesService: FoodTilesService) {
     foodTilesService.foodTiles.subscribe((tiles) => {
       this.foodTiles = tiles;
     });
@@ -18,7 +18,7 @@ export class CalculationService {
 
   public updateConsumption(calories: number, protein: number) {
     this.calories = calories;
-    this.protein = protein;
+    this.proteins = protein;
     this.recalculate();
   }
 
@@ -28,22 +28,24 @@ export class CalculationService {
 
     const min = calculationRatios.reduce((accumulator, value) => accumulator.cpRatio < value.cpRatio ? accumulator : value);
     const max = calculationRatios.reduce((accumulator, value) => accumulator.cpRatio > value.cpRatio ? accumulator : value);
-    if (min.cpRatio > this.caloryProteinRatio) {
+    if (min.cpRatio >= this.caloryProteinRatio) {
       const resultArray = calculationRatios.map((value) => new CalculationRatio(value.cpRatio, 0));
       resultArray[calculationRatios.indexOf(min)] = min;
-      return resultArray;
+      this.updateFoodTiles(resultArray);
+      return;
     }
-
-    if (max.cpRatio < this.caloryProteinRatio) {
+    if (max.cpRatio <= this.caloryProteinRatio) {
       const resultArray = calculationRatios.map((value) => new CalculationRatio(value.cpRatio, 0));
       resultArray[calculationRatios.indexOf(max)] = max;
-      return resultArray;
+      this.updateFoodTiles(resultArray);
+      return;
     }
 
-    this.getRatios(calculationRatios, 1);
+    const result = this.getRatios(calculationRatios, 1);
+    this.updateFoodTiles(result);
 
     let average = 0;
-    for (let ratio of calculationRatios) {
+    for (const ratio of calculationRatios) {
       average += ratio.ratio;
     }
     console.log(average / calculationRatios.length);
@@ -58,10 +60,8 @@ export class CalculationService {
       currentAverageRatio += calculationRatio.ratio;
     }
     if (Math.abs((currentAverageRatio / ratios.length) - this.caloryProteinRatio) <= MINIMUM_RATIO_INTERVAL) {
-      console.log(currentAverageRatio / ratios.length), this.caloryProteinRatio
-    )
-    return ratios;
-  }
+      return ratios;
+    }
 
     const lesserRatios = ratios.filter((value) => value.ratio < this.caloryProteinRatio);
     const biggerRatios = ratios.filter((value) => value.ratio > this.caloryProteinRatio);
@@ -93,7 +93,30 @@ export class CalculationService {
     return this.getRatios(ratios, ++iteration);
   }
 
+  private updateFoodTiles(calculationRatios: CalculationRatio[]) {
+    let calories = 0;
+
+    for (let i = 0; i < this.foodTiles.length; i++) {
+      calories += calculationRatios[i].weight;
+    }
+
+    //calories = this.calories / calories;
+    let proteins = this.proteins / calories
+
+    for (let i = 0; i < this.foodTiles.length; i++) {
+      const foodTile = this.foodTiles[i];
+
+      foodTile.amount = calculationRatios[i].weight// * proteins / foodTile.proteinValue
+
+      if (foodTile.amount > foodTile.maxValue) {
+        foodTile.maxValue = foodTile.amount;
+      }
+    }
+
+    this.foodTilesService.updateTiles(this.foodTiles);
+  }
+
   private get caloryProteinRatio() {
-    return this.calories / this.protein;
+    return this.calories / this.proteins;
   }
 }
