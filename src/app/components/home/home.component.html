@@ -1,35 +1,35 @@
 <div class="grid">
 
-<div></div>
+  <div></div>
   <food-search class="food-search"></food-search>
   <div></div>
   <div></div>
-<generail-info></generail-info>
+  <consumption-summary class="consumption-summary"></consumption-summary>
   <div></div>
   <!--<calculators></calculators>-->
   <calculators class="calculators"></calculators>
 
   <!--<div>-->
-    <!--<h4>Local State</h4>-->
+  <!--<h4>Local State</h4>-->
 
-    <!--<form (ngSubmit)="submitState(localState.value)" autocomplete="off">-->
+  <!--<form (ngSubmit)="submitState(localState.amount)" autocomplete="off">-->
 
-      <!--<input-->
-        <!--[value]="localState.value"-->
-        <!--(input)="localState.value = $event.target.value"-->
-        <!--placeholder="Submit Local State to App State"-->
-        <!--autofocus>-->
+  <!--<input-->
+  <!--[amount]="localState.amount"-->
+  <!--(input)="localState.amount = $event.target.amount"-->
+  <!--placeholder="Submit Local State to App State"-->
+  <!--autofocus>-->
 
-      <!--<button>Submit Value</button>-->
-    <!--</form>-->
-    <!--&lt;!&ndash;-->
-        <!--<input type="text" [value]="localState.value" (input)="localState.value = $event.target.value" autofocus>-->
-        <!--Rather than wiring up two-way data-binding ourselves with [value] and (input)-->
-        <!--we can use Angular's [(ngModel)] syntax-->
-        <!--<input type="text" name="textInput" [(ngModel)]="localState.value" autofocus>-->
-      <!--&ndash;&gt;-->
+  <!--<button>Submit Value</button>-->
+  <!--</form>-->
+  <!--&lt;!&ndash;-->
+  <!--<input type="text" [amount]="localState.amount" (input)="localState.amount = $event.target.amount" autofocus>-->
+  <!--Rather than wiring up two-way data-binding ourselves with [amount] and (input)-->
+  <!--we can use Angular's [(ngModel)] syntax-->
+  <!--<input type="text" name="textInput" [(ngModel)]="localState.amount" autofocus>-->
+  <!--&ndash;&gt;-->
 
-    <!--<pre>this.localState = {{ localState | json }}</pre>-->
+  <!--<pre>this.localState = {{ localState | json }}</pre>-->
 
   <!--</div>-->
 

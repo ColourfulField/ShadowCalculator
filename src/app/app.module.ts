@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
 import { RouterModule, PreloadAllModules } from "@angular/router";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
@@ -29,6 +29,7 @@ import { SliderComponent } from "./components/slider/slider.component";
 import { FoodTileComponent } from "./components/food-tile/food-tile.component";
 import { CalculatorsComponent } from "./components/calculators/calculators.component";
 import { ConsumptionSummaryComponent } from "./components/consumption-summary/consumption-summary.component";
+import { FoodTilesService } from "./services/food-tiles.service";
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -66,6 +67,7 @@ interface StoreType {
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpClientModule,
     RouterModule.forRoot(ROUTES, {
       useHash: Boolean(history.pushState) === false,
@@ -86,6 +88,7 @@ interface StoreType {
     environment.ENV_PROVIDERS,
     APP_PROVIDERS,
     FoodDatabaseService,
+    FoodTilesService,
     CalculationService
   ]
 })

@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input, OnInit } from "@angular/core";
 import { CalculationService } from "../../services/calculation.service";
 import { FoodTileData } from "../../models/models";
 
@@ -8,7 +8,7 @@ import { FoodTileData } from "../../models/models";
   styleUrls: ["./food-tile.component.scss"]
 
 })
-export class FoodTileComponent implements onInit {
+export class FoodTileComponent implements OnInit {
   @Input() public tileData: FoodTileData;
   public sliderValue = 50;
 
@@ -16,7 +16,7 @@ export class FoodTileComponent implements onInit {
   }
 
   public ngOnInit(): void {
-    this.sliderValue = this.tileData.value;
+    this.sliderValue = this.tileData.amount;
   }
 
   public updateValue(newValue: number): void {

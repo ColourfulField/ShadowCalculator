@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { CalculationService } from "../../services/calculation.service";
 import { FoodTileData } from "../../models/models";
+import { FoodTilesService } from "../../services/food-tiles.service";
 
 @Component({
   selector: "calculators",
@@ -10,12 +11,13 @@ import { FoodTileData } from "../../models/models";
 export class CalculatorsComponent implements OnInit {
   public foodTiles: FoodTileData[] = [];
 
-  constructor(private calculationService: CalculationService) {
+  constructor(private calculationService: CalculationService,
+              private foodTilesService: FoodTilesService) {
   }
 
   public ngOnInit(): void {
-    this.foodTiles.push({name: "qwe", maxValue: 100, value: 50});
-    this.foodTiles.push({name: "qwe2", maxValue: 100, value: 50});
-    this.foodTiles.push({name: "qwe3", maxValue: 100, value: 50});
+    this.foodTilesService.foodTiles.subscribe((tiles) => {
+      this.foodTiles = tiles;
+    });
   }
 }
