@@ -1,7 +1,9 @@
 <div class="food-tile">
   <h2>{{tileData.name}}</h2>
   <slider [min]="0" [max]="tileData.maxValue" [value]="tileData.amount" (valueChanged)="updateValue($event)"></slider>
-  {{tileData.amount}}
+  <p>amount: {{tileData.amount}}</p>
+  <p>calories: {{tileData.caloryValue}}</p>
+  <p>proteins: {{tileData.proteinValue}}</p>
 </div>
 
 

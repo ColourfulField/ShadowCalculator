@@ -24,7 +24,7 @@ export class CalculationService {
 
   private recalculate() {
     const cpRatios = this.foodTiles.map((tile: FoodTileData) => tile.caloryValue / tile.proteinValue);
-    const calculationRatios = cpRatios.map((value, index) => new CalculationRatio(value, 1));
+    const calculationRatios = cpRatios.map((value, index) => new CalculationRatio(value, 1, this.foodTiles[index].caloryValue, this.foodTiles[index].proteinValue));
 
     const min = calculationRatios.reduce((accumulator, value) => accumulator.cpRatio < value.cpRatio ? accumulator : value);
     const max = calculationRatios.reduce((accumulator, value) => accumulator.cpRatio > value.cpRatio ? accumulator : value);
@@ -52,41 +52,41 @@ export class CalculationService {
   }
 
   private getRatios(ratios: CalculationRatio[], iteration: number): CalculationRatio[] {
-    if (iteration > 20) {
+    if (iteration > 200) {
       return ratios;
     }
     let currentAverageRatio = 0;
     for (const calculationRatio of ratios) {
       currentAverageRatio += calculationRatio.ratio;
     }
-    if (Math.abs((currentAverageRatio / ratios.length) - this.caloryProteinRatio) <= MINIMUM_RATIO_INTERVAL) {
+
+    //TODO optimize - no need to recalculate on each step
+    const lesserRatios = ratios.filter((value) => value.cpRatio < this.caloryProteinRatio);
+    const biggerRatios = ratios.filter((value) => value.cpRatio > this.caloryProteinRatio);
+    let lesserImpacts = 0;
+    let biggerImpacts = 0;
+
+    for (const calculationRatio of lesserRatios) {
+      lesserImpacts += calculationRatio.getImpact(this.caloryProteinRatio);
+    }
+
+    for (const calculationRatio of biggerRatios) {
+      biggerImpacts += calculationRatio.getImpact(this.caloryProteinRatio);
+    }
+
+    if (Math.abs(lesserImpacts - biggerImpacts) <= MINIMUM_RATIO_INTERVAL) {
       return ratios;
     }
 
-    const lesserRatios = ratios.filter((value) => value.ratio < this.caloryProteinRatio);
-    const biggerRatios = ratios.filter((value) => value.ratio > this.caloryProteinRatio);
-    let lesserAverage = 0;
-    let biggerAverage = 0;
-
-    for (const calculationRatio of lesserRatios) {
-      lesserAverage += calculationRatio.ratio;
-    }
-    lesserAverage /= lesserRatios.length;
-
-    for (const calculationRatio of biggerRatios) {
-      biggerAverage += calculationRatio.ratio;
-    }
-    biggerAverage /= biggerRatios.length
-
-    if (Math.abs(lesserAverage - this.caloryProteinRatio) > Math.abs(biggerAverage - this.caloryProteinRatio)) {
-      for (const calculationRatio of lesserRatios) {
-        const projectedWeight = this.caloryProteinRatio / calculationRatio.cpRatio;
-        calculationRatio.weight = (calculationRatio.weight + projectedWeight) / 2;
-      }
-    } else {
+    if (lesserImpacts < biggerImpacts) {
       for (const calculationRatio of biggerRatios) {
         const projectedWeight = this.caloryProteinRatio / calculationRatio.cpRatio;
-        calculationRatio.weight = (calculationRatio.weight + projectedWeight) / 2;
+        calculationRatio.weight = (calculationRatio.weight/2)// + projectedWeight) / 2;
+      }
+    } else {
+      for (const calculationRatio of lesserRatios) {
+        const projectedWeight = this.caloryProteinRatio / calculationRatio.cpRatio;
+        calculationRatio.weight = (calculationRatio.weight/2)//   + projectedWeight) / 2;
       }
     }
 
@@ -94,19 +94,22 @@ export class CalculationService {
   }
 
   private updateFoodTiles(calculationRatios: CalculationRatio[]) {
+    let weights = 0;
     let calories = 0;
 
     for (let i = 0; i < this.foodTiles.length; i++) {
-      calories += calculationRatios[i].weight;
+      weights += calculationRatios[i].weight;
+      calories += calculationRatios[i].caloryValue;
     }
 
-    //calories = this.calories / calories;
-    let proteins = this.proteins / calories
+    let caloryValue = this.calories / calories;
+
+    let  a = this.calories / weights;
 
     for (let i = 0; i < this.foodTiles.length; i++) {
       const foodTile = this.foodTiles[i];
 
-      foodTile.amount = calculationRatios[i].weight// * proteins / foodTile.proteinValue
+      foodTile.amount = calculationRatios[i].weight/weights * caloryValue * calculationRatios.length;
 
       if (foodTile.amount > foodTile.maxValue) {
         foodTile.maxValue = foodTile.amount;
@@ -120,3 +123,4 @@ export class CalculationService {
     return this.calories / this.proteins;
   }
 }
+
